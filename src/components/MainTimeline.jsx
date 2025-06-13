@@ -1,8 +1,11 @@
 import React from 'react';
 
 function MainTimeline({ students }) {
-  // students データはオブジェクトなので、Object.valuesで配列に変換してマップ
   const studentList = Object.values(students);
+
+  const getStudentIconPath = (studentId) => {
+    return `/images/student/icon/${studentId}.webp`; // または .png
+  };
 
   return (
     <main className="ba-panel" style={{ flexGrow: 1, position: 'relative', overflow: 'hidden' }}>
@@ -27,7 +30,12 @@ function MainTimeline({ students }) {
       {studentList.slice(0, 4).map(student => ( // 例として最初の4人のレーン
         <div key={student.Id + '-lane'} style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid rgba(0,0,0,0.1)', padding: '10px 0', minHeight: '60px' }}>
           <div style={{ width: '80px', flexShrink: 0, fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
-            <img src={`https://assets.schaledb.com/ui/StudentPortraits/${student.Id}.webp`} alt={student.Name} style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '5px', border: '1px solid #007BFF' }} />
+            <img
+              src={getStudentIconPath(student.Id)} // 動的に画像パスを生成
+              alt={student.Name}
+              style={{ width: '40px', height: '40px', borderRadius: '50%', marginRight: '5px', border: '1px solid #007BFF', objectFit: 'cover' }}
+              onError={(e) => { e.target.onerror = null; e.target.src="/images/default_icon.webp" }} // 画像がない場合の代替画像
+            />
             {student.Name}
           </div>
           <div style={{ flexGrow: 1, height: '100%', position: 'relative', background: 'rgba(0,123,255,0.05)', borderRadius: '5px' }}>
